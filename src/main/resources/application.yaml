@@ -1,0 +1,26 @@
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      # org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException:
+      # The field chunk exceeds its maximum permitted size of 1048576 bytes.
+      max-file-size: 50MB
+      # org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException:
+      # the request was rejected because its size (10486156) exceeds the configured maximum (10485760)
+      max-request-size: 50MB
+      # 파일을 디스크에 저장하지 않고 메모리에 저장하는 최소 크기 (default: 0B)
+      file-size-threshold: 0B
+      # 업로드된 파일이 임시로 저장되는 디스크 위치 (default: a temporary directory will be used)
+      # - [Linux] /tmp
+      # - [Windows] C:\Users\{username}\AppData\Local\Temp\
+      # - [macOS] /var/folders/{2_chars}/{32_chars}_T/{username}/T/
+      # location: /tmp
+
+logging:
+  level:
+    root: info
+    com.example.demo: debug
+
+video:
+  upload:
+    path: local-video
