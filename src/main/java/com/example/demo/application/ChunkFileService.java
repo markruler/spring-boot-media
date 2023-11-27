@@ -44,6 +44,7 @@ public class ChunkFileService {
             int totalChunks
     ) throws IOException {
 
+        long start = System.currentTimeMillis();
         File dir = new File(uploadPath);
         if (!dir.exists()) {
             dir.mkdirs();
@@ -78,9 +79,16 @@ public class ChunkFileService {
                 Files.delete(chunkFile);
             }
             log.info("File uploaded successfully: {}", LocalDateTime.now());
+            log.debug("File stream upload took {} s", elapsedTime(start));
             return true;
         }
+        log.debug("File stream upload took {} s", elapsedTime(start));
         return false;
+    }
+
+    private double elapsedTime(long start) {
+        long finish = System.currentTimeMillis();
+        return (finish - start) / 1000d;
     }
 
     public Resource getFilePath(String filename) {

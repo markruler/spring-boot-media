@@ -11,6 +11,8 @@ spring:
       # 파일을 디스크에 저장하지 않고 메모리에 저장하는 최소 크기 (default: 0B)
       file-size-threshold: 0B
       # 업로드된 파일이 임시로 저장되는 디스크 위치 (default: a temporary directory will be used)
+      # https://stackoverflow.com/questions/1952633/will-spring-hold-contents-in-memory-or-stores-in-the-disk
+      # System.getProperty("java.io.tmpdir")
       # - [Linux] /tmp
       # - [Windows] C:\Users\{username}\AppData\Local\Temp\
       # - [macOS] /var/folders/{2_chars}/{32_chars}_T/{username}/T/

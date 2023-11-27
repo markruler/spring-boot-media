@@ -9,6 +9,7 @@ import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Slf4j
@@ -23,6 +24,9 @@ public class FileStreamController {
     public void uploadStream(
             final HttpServletRequest request
     ) throws IOException {
+        log.debug("File stream upload started: {}", LocalDateTime.now());
+        long start = System.currentTimeMillis();
+
         String contentType = request.getContentType();
         log.debug("contentType: {}", contentType);
         Long contentLengthLong = request.getContentLengthLong();
@@ -46,6 +50,12 @@ public class FileStreamController {
         } catch (Exception e) {
             log.error("Exception: {}", e.getMessage());
         }
+        log.debug("File stream upload completed: {}", LocalDateTime.now());
+        log.debug("File stream upload took {} s", elapsedTime(start));
     }
 
+    private double elapsedTime(long start) {
+        long finish = System.currentTimeMillis();
+        return (finish - start) / 1000d;
+    }
 }
