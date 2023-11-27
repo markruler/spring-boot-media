@@ -3,66 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Chunk file upload</title>
-    <style>
-        .dimmed {
-            display: none;
-            position: fixed;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 101;
-        }
 
-        .loading {
-            display: none;
-            position: fixed;
-            width: 64px;
-            height: 64px;
-            top: 35%;
-            left: 41%;
-            z-index: 102; /* 101 is the z-index of the .dimmed */
-        }
-
-        .loading div {
-            display: inline-block;
-            position: absolute;
-            left: 6px;
-            width: 13px;
-            background: #42b883;
-            animation: loading 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
-        }
-
-        .loading div:nth-child(1) {
-            left: 6px;
-            animation-delay: -0.24s;
-        }
-
-        .loading div:nth-child(2) {
-            left: 26px;
-            animation-delay: -0.12s;
-        }
-
-        .loading div:nth-child(3) {
-            left: 45px;
-            animation-delay: 0;
-        }
-
-        @keyframes loading {
-            0% {
-                top: 6px;
-                height: 51px;
-            }
-            50%, 100% {
-                top: 19px;
-                height: 26px;
-            }
-        }
-    </style>
+    <link th:href="@{/css/file.css}" rel="stylesheet" />
+    <link th:href="@{/css/progress.css}" rel="stylesheet" />
 </head>
 <body>
 
+<h1>파일 업로드</h1>
 <section>
     <div>
         <input
@@ -70,67 +17,35 @@
                 style="display:none;"
                 type="file"
                 name="file">
+        <label for="video-name">파일명</label>
         <input
                 id="video-name"
                 type="text"
-                name="vide-name"
-                style="
-                    border: 0;
-                    width: 400px;
-                    height: 30px;
-                    font-size: 20px;
-                "
-                disabled
-        >
+                name="video-name"
+                disabled>
     </div>
     <div>
         <button
-                style="
-                    background-color: #67ccda;
-                    display: inline-block;
-                    width: 150px;
-                    padding: 10px;
-                    border-radius: 5px;
-                    cursor: pointer;
-                    margin: 10px 0 0;"
+                class="btn-blue"
                 onclick="set_file()">파일 선택
         </button>
         <button
-                style="
-                    background-color: #faebd7;
-                    display: inline-block;
-                    width: 150px;
-                    padding: 10px;
-                    border-radius: 5px;
-                    cursor: pointer;
-                    margin: 10px 0 0;"
+                class="btn-yellow"
                 onclick="send_video_chunks()">Chunk 업로드
         </button>
         <button
-                style="
-                    background-color: #faebd7;
-                    display: inline-block;
-                    width: 150px;
-                    padding: 10px;
-                    border-radius: 5px;
-                    cursor: pointer;
-                    margin: 10px 0 0;"
+                class="btn-yellow"
                 onclick="send_video_stream()">Stream 업로드
         </button>
     </div>
 </section>
 
 <hr>
-<div
-        id="result"
-        style="
-            font-size: 30px;
-            color: rgba(255,73,73,0.78);
-            font-weight: bold;
-        "
-></div>
+<h1>업로드 진행도</h1>
+<div id="result"></div>
 <hr>
 
+<h1>영상 목록(<code>/local-video</code>)</h1>
 <section style="display: flex; align-items: start;" th:each="filename: ${filelist}">
     <div>
         <h3>normal</h3>
@@ -155,6 +70,7 @@
         </video>
     </div>
 </section>
+
 <section class="dimmed"></section>
 <section class="loading">
     <div></div>
@@ -188,99 +104,11 @@
             console.log(event.target.value);
             document.querySelector("#video-name").value = cleanup_chrome_fakepath(event.target.value);
         });
-
-    function send_video_chunks() {
-        show_loading();
-
-        const ONE_MB = 1024 * 1024;
-        const chunk_size = 10 * ONE_MB;
-        const file = document.getElementById("video-file").files[0];
-        const result_element = document.getElementById("result");
-
-        // total size 계산
-        const total_chunks = Math.ceil(file.size / chunk_size);
-        let current_chunk = 0;
-
-        sendNextChunk(result_element, total_chunks, current_chunk, chunk_size, file);
-    }
-
-    // chunk file 전송
-    function sendNextChunk(result_element, total_chunks, current_chunk, chunk_size, file) {
-
-        // chunk size 만큼 데이터 분할
-        const start = current_chunk * chunk_size;
-        const end = Math.min(start + chunk_size, file.size);
-
-        const chunk = file.slice(start, end);
-
-        // form data 형식으로 전송
-        const formData = new FormData();
-        formData.append("chunk", chunk, file.name);
-        formData.append("chunkNumber", current_chunk);
-        formData.append("totalChunks", total_chunks);
-
-        fetch("/chunk/upload", {
-            method: "post",
-            body: formData
-        }).then(resp => {
-            // 전송 결과가 206(Partial Content)이면 다음 파일 조각 전송
-            if (resp.status === 206) {
-                // 진행률 표시
-                result_element.textContent =
-                    Math.round(current_chunk / total_chunks * 100) + "%"
-
-                current_chunk++;
-                if (current_chunk < total_chunks) {
-                    sendNextChunk(result_element, total_chunks, current_chunk, chunk_size, file);
-                }
-                // 마지막 파일까지 전송 되면
-            } else if (resp.status === 200) {
-                resp.text().then(data => result_element.textContent = data);
-                hide_loading();
-            }
-        }).catch(err => {
-            console.error("Error uploading video chunk", err);
-            hide_loading();
-        });
-    }
-
-    function send_video_stream() {
-        show_loading();
-
-        const file = document.getElementById("video-file").files[0];
-        const result_element = document.getElementById("result");
-
-        fetch("/stream/upload", {
-            method: "post",
-            body: file
-        }).then(resp => {
-            if (resp.status === 200) {
-                resp.text().then(data => result_element.textContent = data);
-                hide_loading();
-            }
-        }).catch(err => {
-            console.error("Error uploading video chunk", err);
-            hide_loading();
-        });
-    }
-
-    /**
-     * Spinner 표시
-     */
-    function show_loading(){
-        console.log('show_loading');
-        document.querySelector('.loading').style.display = 'block';
-        document.querySelector('.dimmed').style.display = 'block';
-    }
-
-    /**
-     * Spinner 숨김
-     */
-    function hide_loading(){
-        console.log('hide_loading');
-        document.querySelector('.loading').style.display = 'none';
-        document.querySelector('.dimmed').style.display = 'none';
-    }
-
 </script>
+
+<script type="text/javascript" th:src="@{/js/progress.js}"></script>
+<script type="text/javascript" th:src="@{/js/upload-file-chunk.js}"></script>
+<script type="text/javascript" th:src="@{/js/upload-file-stream.js}"></script>
+<script type="text/javascript" th:src="@{/js/upload-file-multiply.js}"></script>
+
 </html>

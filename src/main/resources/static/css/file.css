@@ -1,0 +1,33 @@
+.btn-blue {
+    background-color: #67ccda;
+    display: inline-block;
+    width: 150px;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 10px 0 0;
+}
+
+.btn-yellow {
+    background-color: #faebd7;
+    display: inline-block;
+    width: 150px;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 10px 0 0;
+}
+
+#result {
+    font-size: 30px;
+    color: rgba(255, 73, 73, 0.78);
+    font-weight: bold;
+}
+
+input[name="video-name"] {
+    border: 0;
+    width: 400px;
+    height: 30px;
+    font-size: 20px;
+    background-color: #9191914a;
+}
