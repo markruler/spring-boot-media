@@ -37,12 +37,13 @@
                 class="btn-yellow"
                 onclick="send_video_stream()">Stream 업로드
         </button>
+        <button
+                class="btn-yellow"
+                onclick="send_file_multiply(20)">같은 파일을 여러개 업로드
+        </button>
     </div>
 </section>
 
-<hr>
-<h1>업로드 진행도</h1>
-<div id="result"></div>
 <hr>
 
 <h1>영상 목록(<code>/local-video</code>)</h1>
@@ -76,6 +77,9 @@
     <div></div>
     <div></div>
     <div></div>
+    <section id="chunk-start" class="result"></section>
+    <section id="chunk-end" class="result"></section>
+    <section id="result" class="result"></section>
 </section>
 
 </body>
@@ -99,9 +103,9 @@
     document
         .querySelector("#video-file")
         .addEventListener("change", (event) => {
-            console.log(event);
-            console.log(event.target.files);
-            console.log(event.target.value);
+            // console.debug(event);
+            // console.debug(event.target.files);
+            // console.debug(event.target.value);
             document.querySelector("#video-name").value = cleanup_chrome_fakepath(event.target.value);
         });
 </script>
