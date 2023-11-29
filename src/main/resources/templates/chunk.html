@@ -47,28 +47,31 @@
 <hr>
 
 <h1>영상 목록(<code>/local-video</code>)</h1>
-<section style="display: flex; align-items: start;" th:each="filename: ${filelist}">
-    <div>
-        <h3>normal</h3>
-        <video
-                th:src="@{/vod/{vod_name}(vod_name=${filename})}"
-                width="360px"
-                height="240px"
-                autoplay
-                muted
-                controls>
-        </video>
-    </div>
-    <div>
-        <h3>chunk - 시작 속도가 더 빠르고, 중간에 다운로드 실패 시 다시 다운로드하는 기능을 추가할 수 있음.</h3>
-        <video
-                th:src="@{/vod/chunk/{vod_name}(vod_name=${filename})}"
-                width="360px"
-                height="240px"
-                autoplay
-                muted
-                controls>
-        </video>
+<section class="video-box" th:each="filename: ${filelist}">
+    <h2>[[${filename}]]</h2>
+    <div class="video-div">
+        <div>
+            <h3>normal</h3>
+            <video
+                    th:src="@{/vod/{vod_name}(vod_name=${filename})}"
+                    width="360px"
+                    height="240px"
+                    autoplay
+                    muted
+                    controls>
+            </video>
+        </div>
+        <div>
+            <h3>chunk - 시작 속도가 더 빠르고, 중간에 다운로드 실패 시 다시 다운로드하는 기능을 추가할 수 있음.</h3>
+            <video
+                    th:src="@{/vod/chunk/{vod_name}(vod_name=${filename})}"
+                    width="360px"
+                    height="240px"
+                    autoplay
+                    muted
+                    controls>
+            </video>
+        </div>
     </div>
 </section>
 
@@ -84,6 +87,11 @@
 
 </body>
 <script>
+    /**
+     * 디버그용 alert를 띄울지 여부
+     * @type {boolean} alert 여부
+     */
+    const debug_alert = false;
     /**
      * 크롬 브라우저에서 임의로 추가한 경로를 제거한다.
      *

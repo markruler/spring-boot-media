@@ -24,7 +24,7 @@ function send_next_file(current, count) {
             if (current < count) {
                 send_next_file(current + 1, count);
                 const result_element = document.getElementById("result");
-                result_element.textContent = `${(current + 1) / count * 100}%`;
+                result_element.textContent = `${Math.floor((current + 1) / count * 100)}%`;
             } else {
                 hide_loading();
             }

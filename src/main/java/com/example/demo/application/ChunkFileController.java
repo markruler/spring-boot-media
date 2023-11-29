@@ -107,7 +107,8 @@ public class ChunkFileController {
                         httpRange.getRangeStart(contentLength),
                         rangeLength);
 
-        return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+        return ResponseEntity
+                .status(HttpStatus.PARTIAL_CONTENT)
                 .cacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES))
                 .contentType(
                         MediaTypeFactory

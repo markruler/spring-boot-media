@@ -6,11 +6,14 @@ function send_video_chunks() {
 
     const ONE_MB = 1024 * 1024;
     const chunk_size = 10 * ONE_MB;
+    if (debug_alert) alert(`(1) chunk size: ${chunk_size}`);
     const file = document.getElementById("video-file").files[0];
+    if (debug_alert) alert(`(2) file size: ${file.size}`);
 
     // total size 계산
     const total_chunks = Math.ceil(file.size / chunk_size);
     let current_chunk = 0;
+    if (debug_alert) alert(`(3) total chunks: ${total_chunks}`);
 
     // recursive
     sendNextChunk(total_chunks, current_chunk, chunk_size, file);
@@ -25,20 +28,23 @@ function send_video_chunks() {
  */
 function sendNextChunk(total_chunks, current_chunk, chunk_size, file) {
     // chunk size 만큼 데이터 분할
+    if (debug_alert) alert(`(4) recursive - current chunk: ${current_chunk}`)
     const start = current_chunk * chunk_size;
     const end = Math.min(start + chunk_size, file.size);
 
+    if (debug_alert) alert(`(5) start: ${start}, end: ${end}`);
     document.querySelector("#chunk-start").textContent = `Chunking... ${start}`;
-    console.log(`${new Date} chunking... ${start}`);
+    console.log(`${new Date} chunking... ${end}`);
     const chunk = file.slice(start, end);
     console.log(`${new Date} chunking done...`);
-    document.querySelector("#chunk-end").textContent = `Chunking Done ${start}`;
+    document.querySelector("#chunk-end").textContent = `Chunking Done ${end}`;
 
     // form data 형식으로 전송
     const formData = new FormData();
     formData.append("chunk", chunk, file.name);
     formData.append("chunkNumber", current_chunk);
     formData.append("totalChunks", total_chunks);
+    if (debug_alert) alert(`(6) fetch...`);
 
     fetch("/chunk/upload", {
         method: "post",
@@ -49,7 +55,7 @@ function sendNextChunk(total_chunks, current_chunk, chunk_size, file) {
         if (resp.status === 206) {
             // 진행률 표시
             result_element.textContent =
-                Math.round(current_chunk / total_chunks * 100) + "%"
+                Math.floor(current_chunk / total_chunks * 100) + "%"
 
             current_chunk++;
             if (current_chunk < total_chunks) {
