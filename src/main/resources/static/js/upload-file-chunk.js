@@ -1,7 +1,7 @@
 /**
  * chunk file 전송 전처리
  */
-function send_video_chunks() {
+function send_file_chunks() {
     show_loading();
 
     const ONE_MB = 1024 * 1024;
@@ -16,7 +16,7 @@ function send_video_chunks() {
     if (debug_alert) alert(`(3) total chunks: ${total_chunks}`);
 
     // recursive
-    sendNextChunk(total_chunks, current_chunk, chunk_size, file);
+    send_next_file_chunk(total_chunks, current_chunk, chunk_size, file);
 }
 
 /**
@@ -26,7 +26,7 @@ function send_video_chunks() {
  * @param chunk_size
  * @param file
  */
-function sendNextChunk(total_chunks, current_chunk, chunk_size, file) {
+function send_next_file_chunk(total_chunks, current_chunk, chunk_size, file) {
     // chunk size 만큼 데이터 분할
     if (debug_alert) alert(`(4) recursive - current chunk: ${current_chunk}`)
     const start = current_chunk * chunk_size;
@@ -59,7 +59,7 @@ function sendNextChunk(total_chunks, current_chunk, chunk_size, file) {
 
             current_chunk++;
             if (current_chunk < total_chunks) {
-                sendNextChunk(total_chunks, current_chunk, chunk_size, file);
+                send_next_file_chunk(total_chunks, current_chunk, chunk_size, file);
             }
             // 마지막 파일까지 전송 되면
         } else if (resp.status === 200) {

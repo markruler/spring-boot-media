@@ -1,7 +1,7 @@
 /**
  * 파일 업로드
  */
-function send_video_stream() {
+function send_file_stream() {
     show_loading();
 
     const file = document.getElementById("video-file").files[0];

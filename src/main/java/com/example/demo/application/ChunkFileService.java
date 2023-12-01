@@ -1,5 +1,6 @@
 package com.example.demo.application;
 
+import com.example.demo.application.util.FilePath;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -38,10 +39,19 @@ public class ChunkFileService {
         return Collections.emptyList();
     }
 
-    public boolean chunkUpload(
-            MultipartFile file,
-            int chunkNumber,
-            int totalChunks
+    /**
+     * 파일 동기 업로드
+     *
+     * @param file
+     * @param chunkNumber
+     * @param totalChunks
+     * @return
+     * @throws IOException
+     */
+    public boolean uploadChunk(
+            final MultipartFile file,
+            final int chunkNumber,
+            final int totalChunks
     ) throws IOException {
 
         long start = System.currentTimeMillis();
@@ -67,7 +77,12 @@ public class ChunkFileService {
         if (chunkNumber == totalChunks - 1) {
             log.debug("File <{}> upload finished", originalFilename);
             String[] split = originalFilename.split("\\.");
-            String outputFilename = UUID.randomUUID() + "." + split[split.length - 1];
+            final String outputFilename =
+                    FilePath.epochTime()
+                            + "-"
+                            + UUID.randomUUID().toString().replace("-", "").toLowerCase()
+                            + "."
+                            + split[split.length - 1];
             Path outputFile = Paths.get(uploadPath, outputFilename);
             Files.createFile(outputFile);
 
@@ -93,5 +108,21 @@ public class ChunkFileService {
 
     public Resource getFilePath(String filename) {
         return new FileSystemResource(uploadPath + "/" + filename);
+    }
+
+    /**
+     * 파일 비동기 업로드
+     *
+     * @param file
+     * @param chunkNumber
+     * @param totalChunks
+     * @return
+     */
+    public boolean uploadChunkAsync(
+            final MultipartFile file,
+            final int chunkNumber,
+            final int totalChunks
+    ) {
+        return false;
     }
 }
