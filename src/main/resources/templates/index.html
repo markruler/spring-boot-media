@@ -45,6 +45,14 @@
                 class="btn-red"
                 onclick="send_file_chunks_async()">비동기 Chunk 업로드
         </button>
+        <button
+                class="btn-red"
+                onclick="send_file_s3_multipart()">화면-서버-S3
+        </button>
+        <button
+                class="btn-disabled"
+                onclick="alert('AWS Cognito 사용')">화면-S3
+        </button>
     </div>
 </section>
 
@@ -128,5 +136,6 @@
 <script type="text/javascript" th:src="@{/js/upload-file-stream.js}"></script>
 <script type="text/javascript" th:src="@{/js/upload-file-multiply.js}"></script>
 <script type="text/javascript" th:src="@{/js/upload-file-chunk-async.js}"></script>
+<script type="text/javascript" th:src="@{/js/upload-file-s3.js}"></script>
 
 </html>

@@ -1,11 +1,10 @@
 package com.example.demo.application.async.controller;
 
 import com.example.demo.application.async.AsyncChunkFileService;
-import com.example.demo.application.async.CompleteAsyncChunkUpload;
+import com.example.demo.application.async.dto.CompleteAsyncChunkUpload;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,8 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -40,7 +37,7 @@ public class AsyncChunkFileController {
             @RequestParam String uploadId,
             @RequestParam String index,
             @RequestPart("chunk") MultipartFile file
-    ) throws IOException, NoSuchAlgorithmException, ExecutionException, InterruptedException, TimeoutException {
+    ) throws IOException, ExecutionException, InterruptedException, TimeoutException {
         return service.uploadChunkAsync(
                 uploadId,
                 index,

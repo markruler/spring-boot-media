@@ -1,4 +1,4 @@
-package com.example.demo.application.async;
+package com.example.demo.application.async.dto;
 
 import lombok.Getter;
 import lombok.ToString;

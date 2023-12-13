@@ -26,3 +26,8 @@ logging:
 video:
   upload:
     path: local-video
+
+cloud:
+  aws:
+    s3:
+      bucket: YOUR_BUCKET_NAME
