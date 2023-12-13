@@ -110,19 +110,4 @@ public class ChunkFileService {
         return new FileSystemResource(uploadPath + "/" + filename);
     }
 
-    /**
-     * 파일 비동기 업로드
-     *
-     * @param file
-     * @param chunkNumber
-     * @param totalChunks
-     * @return
-     */
-    public boolean uploadChunkAsync(
-            final MultipartFile file,
-            final int chunkNumber,
-            final int totalChunks
-    ) {
-        return false;
-    }
 }

@@ -18,6 +18,16 @@ h3 {
     margin: 0 10px;
 }
 
+.btn-red {
+    background-color: #ff4949;
+    display: inline-block;
+    width: 150px;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 10px 0 0;
+}
+
 .btn-blue {
     background-color: #67ccda;
     display: inline-block;

@@ -41,6 +41,10 @@
                 class="btn-yellow"
                 onclick="send_file_multiply(20)">같은 파일을 여러개 업로드
         </button>
+        <button
+                class="btn-red"
+                onclick="send_file_chunks_async()">비동기 Chunk 업로드
+        </button>
     </div>
 </section>
 
@@ -83,6 +87,7 @@
     <section id="chunk-start" class="result"></section>
     <section id="chunk-end" class="result"></section>
     <section id="result" class="result"></section>
+    <input type="hidden" id="current-progress" value="0"/>
 </section>
 
 </body>
@@ -122,5 +127,6 @@
 <script type="text/javascript" th:src="@{/js/upload-file-chunk.js}"></script>
 <script type="text/javascript" th:src="@{/js/upload-file-stream.js}"></script>
 <script type="text/javascript" th:src="@{/js/upload-file-multiply.js}"></script>
+<script type="text/javascript" th:src="@{/js/upload-file-chunk-async.js}"></script>
 
 </html>
