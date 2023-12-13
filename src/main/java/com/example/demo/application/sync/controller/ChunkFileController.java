@@ -1,5 +1,6 @@
-package com.example.demo.application;
+package com.example.demo.application.sync.controller;
 
+import com.example.demo.application.sync.ChunkFileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

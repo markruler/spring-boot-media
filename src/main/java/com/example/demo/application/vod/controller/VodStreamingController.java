@@ -1,5 +1,6 @@
-package com.example.demo.application;
+package com.example.demo.application.vod.controller;
 
+import com.example.demo.application.sync.ChunkFileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
@@ -29,7 +30,7 @@ public class VodStreamingController {
     @GetMapping("/")
     public String chunkUploadPage(Model model) {
         model.addAttribute("filelist", chunkFileService.listFiles());
-        return "chunk";
+        return "index";
     }
 
     /**

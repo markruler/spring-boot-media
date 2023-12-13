@@ -1,4 +1,4 @@
-package com.example.demo.application;
+package com.example.demo.application.sync.controller;
 
 import com.example.demo.application.util.FilePath;
 import lombok.RequiredArgsConstructor;
