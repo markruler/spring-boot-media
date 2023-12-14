@@ -2,9 +2,11 @@ package com.example.demo.application.vod.controller;
 
 import com.example.demo.application.sync.ChunkFileService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.CacheControl;
+import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRange;
 import org.springframework.http.HttpStatus;
@@ -33,9 +35,6 @@ public class VodStreamingController {
         return "index";
     }
 
-    /**
-     * @see <a href="https://velog.io/@haerong22/%EC%98%81%EC%83%81-%EC%8A%A4%ED%8A%B8%EB%A6%AC%EB%B0%8D-6.-%EC%8A%A4%ED%8A%B8%EB%A6%AC%EB%B0%8D">영상 스트리밍(video tag)</a>
-     */
     @ResponseBody
     @GetMapping("/vod/{filename}")
     public ResponseEntity<Resource> vod(
@@ -50,6 +49,30 @@ public class VodStreamingController {
                                 .orElse(MediaType.APPLICATION_OCTET_STREAM))
                 .contentLength(resource.contentLength())
                 .body(resource);
+    }
+
+    @ResponseBody
+    @GetMapping("/vod/stream/{filename}")
+    public ResponseEntity<Resource> vodStream(
+            @PathVariable String filename
+    ) throws IOException {
+        final Resource resource = chunkFileService.getFilePath(filename);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaTypeFactory
+                                        .getMediaType(resource)
+                                        .orElse(MediaType.APPLICATION_OCTET_STREAM));
+        headers.setContentDisposition(
+                ContentDisposition
+                        .attachment()
+                        .filename("demo-video")
+                        .build()
+        );
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentLength(resource.contentLength())
+                .body(new InputStreamResource(resource.getInputStream()));
     }
 
     /**

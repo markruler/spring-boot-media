@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <title>Chunk file upload</title>
 
-    <link th:href="@{/css/file.css}" rel="stylesheet" />
-    <link th:href="@{/css/progress.css}" rel="stylesheet" />
+    <link th:href="@{/css/file.css}" rel="stylesheet"/>
+    <link th:href="@{/css/progress.css}" rel="stylesheet"/>
 </head>
 <body>
 
@@ -64,6 +64,14 @@
     <div class="video-div">
         <div>
             <h3>normal</h3>
+            <!--<button th:onclick="|downloadFromUrl('@{/vod/{vod_name}(vod_name=${filename})}')|">-->
+            <!--    download-->
+            <!--</button>-->
+            <button th:onclick="downloadFromFilename([[${filename}]])">
+                download
+            </button>
+            <!--같은 host에서 다운로드하면 dev tool로 확인할 수 없음-->
+            <!--<a th:href="@{'http://192.168.0.148:8080/vod/' + ${filename}}" target="_blank">download</a>-->
             <video
                     th:src="@{/vod/{vod_name}(vod_name=${filename})}"
                     width="360px"
@@ -105,6 +113,7 @@
      * @type {boolean} alert 여부
      */
     const debug_alert = false;
+
     /**
      * 크롬 브라우저에서 임의로 추가한 경로를 제거한다.
      *
@@ -129,6 +138,30 @@
             // console.debug(event.target.value);
             document.querySelector("#video-name").value = cleanup_chrome_fakepath(event.target.value);
         });
+
+    function downloadFromUrl(url) {
+        download(url);
+    }
+
+    function downloadFromFilename(filename) {
+        download('http://192.168.0.148:8080/vod/stream/' + filename);
+    }
+
+    function download(url) {
+        fetch(url)
+            .then(response => response.blob())
+            .then(blob => {
+                const downloadUrl = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = downloadUrl;
+                a.download = "test-filename.mp4";
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(downloadUrl);
+            })
+            .catch(e => console.error(e));
+    }
 </script>
 
 <script type="text/javascript" th:src="@{/js/progress.js}"></script>
