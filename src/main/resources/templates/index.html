@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Chunk file upload</title>
+    <title>Demo - File upload</title>
 
     <link th:href="@{/css/file.css}" rel="stylesheet"/>
     <link th:href="@{/css/progress.css}" rel="stylesheet"/>
@@ -51,7 +51,7 @@
         </button>
         <button
                 class="btn-disabled"
-                onclick="alert('AWS Cognito 사용')">화면-S3
+                onclick="alert('AWS Cognito 사용 & 데모를 위해 Credentials 사용');">화면-S3
         </button>
     </div>
 </section>
@@ -67,8 +67,9 @@
             <!--<button th:onclick="|downloadFromUrl('@{/vod/{vod_name}(vod_name=${filename})}')|">-->
             <!--    download-->
             <!--</button>-->
+            <a th:href="@{/vod/{vod_name}(vod_name=${filename})}" download>a download</a>
             <button th:onclick="downloadFromFilename([[${filename}]])">
-                download
+                fetch download
             </button>
             <!--같은 host에서 다운로드하면 dev tool로 확인할 수 없음-->
             <!--<a th:href="@{'http://192.168.0.148:8080/vod/' + ${filename}}" target="_blank">download</a>-->
@@ -169,6 +170,6 @@
 <script type="text/javascript" th:src="@{/js/upload-file-stream.js}"></script>
 <script type="text/javascript" th:src="@{/js/upload-file-multiply.js}"></script>
 <script type="text/javascript" th:src="@{/js/upload-file-chunk-async.js}"></script>
-<script type="text/javascript" th:src="@{/js/upload-file-s3.js}"></script>
+<script type="text/javascript" th:src="@{/js/upload-file-sever-to-s3.js}"></script>
 
 </html>
