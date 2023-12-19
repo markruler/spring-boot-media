@@ -51,6 +51,10 @@
         </button>
         <button
                 class="btn-disabled"
+                onclick="send_file_server_s3_multipart_recursive()">화면-S3 (recursive)
+        </button>
+        <button
+                class="btn-disabled"
                 onclick="send_file_s3_multipart()">화면-S3
         </button>
     </div>
@@ -172,6 +176,7 @@
 <script type="text/javascript" th:src="@{/js/upload-file-multiply.js}"></script>
 <script type="text/javascript" th:src="@{/js/upload-file-chunk-async.js}"></script>
 <script type="text/javascript" th:src="@{/js/upload-file-sever-to-s3.js}"></script>
+<script type="text/javascript" th:src="@{/js/upload-file-sever-to-s3-recursive.js}"></script>
 
 <!--https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/#In_the_Browser-->
 <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1521.0.min.js"></script>
