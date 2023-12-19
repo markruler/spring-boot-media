@@ -53,8 +53,8 @@ public class ChunkFileService {
             final int chunkNumber,
             final int totalChunks
     ) throws IOException {
-
         long start = System.currentTimeMillis();
+
         File dir = new File(uploadPath);
         if (!dir.exists()) {
             dir.mkdirs();
