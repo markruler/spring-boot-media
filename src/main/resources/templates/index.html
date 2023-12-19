@@ -30,6 +30,10 @@
                 onclick="set_file()">파일 선택
         </button>
         <button
+                class="btn-green"
+                onclick="send_file()">통짜 업로드
+        </button>
+        <button
                 class="btn-yellow"
                 onclick="send_file_chunks()">Chunk 업로드
         </button>
@@ -171,6 +175,7 @@
 </script>
 
 <script type="text/javascript" th:src="@{/js/progress.js}"></script>
+<script type="text/javascript" th:src="@{/js/upload-file.js}"></script>
 <script type="text/javascript" th:src="@{/js/upload-file-chunk.js}"></script>
 <script type="text/javascript" th:src="@{/js/upload-file-stream.js}"></script>
 <script type="text/javascript" th:src="@{/js/upload-file-multiply.js}"></script>
