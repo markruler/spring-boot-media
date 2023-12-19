@@ -1,15 +1,15 @@
 /**
  * chunk file 비동기 전송 전처리
  */
-async function send_file_s3_multipart() {
+async function send_file_server_s3_multipart() {
     show_loading();
 
     // uploadId 발급
-    const uploadId = await init_async_s3_multipart();
+    const uploadId = await init_async_server_s3_multipart();
     console.debug(`uploadId: ${uploadId}`);
 
     const file = document.getElementById("video-file").files[0];
-    const requests = await make_s3_multipart_requests(uploadId, file);
+    const requests = await make_server_s3_multipart_requests(uploadId, file);
 
     // 업로드 한 chunk 파일들의 etag 목록
     const etags = await Promise.all(
@@ -22,7 +22,7 @@ async function send_file_s3_multipart() {
     });
 
     // 업로드 완료 후 알림 및 조합 처리
-    await complete_s3_multipart_async(
+    await complete_server_s3_multipart_async(
         uploadId,
         etags,
         file.name.split('.').pop(),
@@ -34,7 +34,7 @@ async function send_file_s3_multipart() {
  *
  * @returns {Promise<string>}
  */
-async function init_async_s3_multipart() {
+async function init_async_server_s3_multipart() {
     return await fetch("/s3/init").then((res) => res.text());
 }
 
@@ -44,7 +44,7 @@ async function init_async_s3_multipart() {
  * @param file
  * @returns {Promise<*[]>}
  */
-async function make_s3_multipart_requests(uploadId, file) {
+async function make_server_s3_multipart_requests(uploadId, file) {
     document.getElementById("current-progress").value = 0;
 
     const ONE_MB = 1024 * 1024;
@@ -62,7 +62,7 @@ async function make_s3_multipart_requests(uploadId, file) {
         console.log(`current_index(${current_index}) <= total_chunks(${total_chunks})`);
         const start = (current_index - 1) * chunk_size;
         const chunk = file.slice(start, Math.min(start + chunk_size, file.size));
-        requests.push(send_next_s3_multipart_async(uploadId, current_index, total_chunks, chunk));
+        requests.push(send_next_server_s3_multipart_async(uploadId, current_index, total_chunks, chunk));
         current_index++;
     }
 
@@ -77,7 +77,7 @@ async function make_s3_multipart_requests(uploadId, file) {
  * @param total_chunks 전체 chunk 수
  * @param chunk chunk file
  */
-async function send_next_s3_multipart_async(
+async function send_next_server_s3_multipart_async(
     uploadId,
     current_index,
     total_chunks,
@@ -107,7 +107,7 @@ async function send_next_s3_multipart_async(
     });
 }
 
-async function complete_s3_multipart_async(
+async function complete_server_s3_multipart_async(
     uploadId,
     etags,
     fileExtension,

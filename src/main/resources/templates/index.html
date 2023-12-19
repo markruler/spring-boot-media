@@ -47,11 +47,11 @@
         </button>
         <button
                 class="btn-red"
-                onclick="send_file_s3_multipart()">화면-서버-S3
+                onclick="send_file_server_s3_multipart()">화면-서버-S3
         </button>
         <button
                 class="btn-disabled"
-                onclick="alert('AWS Cognito 사용 & 데모를 위해 Credentials 사용');">화면-S3
+                onclick="send_file_s3_multipart()">화면-S3
         </button>
     </div>
 </section>
@@ -108,6 +108,7 @@
 </section>
 
 </body>
+
 <script>
     /**
      * 디버그용 alert를 띄울지 여부
@@ -171,5 +172,9 @@
 <script type="text/javascript" th:src="@{/js/upload-file-multiply.js}"></script>
 <script type="text/javascript" th:src="@{/js/upload-file-chunk-async.js}"></script>
 <script type="text/javascript" th:src="@{/js/upload-file-sever-to-s3.js}"></script>
+
+<!--https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/#In_the_Browser-->
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.1521.0.min.js"></script>
+<script type="text/javascript" th:src="@{/js/upload-file-s3.js}"></script>
 
 </html>
