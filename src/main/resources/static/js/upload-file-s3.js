@@ -27,10 +27,9 @@ async function send_file_s3_multipart() {
     const file = document.getElementById("video-file").files[0];
 
     // software.amazon.awssdk.services.s3.model.S3Exception: Part number must be an integer between 1 and 10000
-    // let current_index = 1;
-    const requests = await make_s3_multipart_requests(uploadId, file);
-    await Promise
-        .all(requests)
+    let current_index = 1;
+    let etags = [];
+    await send_next_s3_multipart_async(uploadId, current_index, etags, file)
         .then((etags) => {
             console.info(etags);
 
@@ -59,29 +58,24 @@ async function init_multipart_upload_id() {
         });
 }
 
-async function make_s3_multipart_requests(uploadId, file) {
-    document.getElementById("current-progress").value = 0;
-
+async function send_next_s3_multipart_async(uploadId, current_index, etags, file) {
     const ONE_MB = 1024 * 1024;
     // software.amazon.awssdk.services.s3.model.S3Exception:
     // Your proposed upload is smaller than the minimum allowed size
     // minimum size: 5MB
     const chunk_size = 10 * ONE_MB;
     const total_chunks = Math.ceil(file.size / chunk_size);
-
-    // software.amazon.awssdk.services.s3.model.S3Exception: Part number must be an integer between 1 and 10000
-    let current_index = 1;
-
-    console.log(`current_index(${current_index}) > total_chunks(${total_chunks})`);
-    let requests = [];
-    while (current_index <= total_chunks) {
-        console.log(`current_index(${current_index}) <= total_chunks(${total_chunks})`);
-        const start = (current_index - 1) * chunk_size;
-        const chunk = file.slice(start, Math.min(start + chunk_size, file.size));
-        requests.push(send_next_s3_multipart_async(uploadId, current_index, total_chunks, chunk));
-        current_index++;
+    if (current_index > total_chunks) {
+        return;
     }
-    return requests;
+    console.log(`current_index(${current_index}) > total_chunks(${total_chunks})`);
+
+    const start = (current_index - 1) * chunk_size;
+    const chunk = file.slice(start, Math.min(start + chunk_size, file.size));
+    const etag = await upload_s3_multipart_async(uploadId, current_index, total_chunks, chunk);
+    etags.push(etag);
+    await send_next_s3_multipart_async(uploadId, current_index + 1, etags, file);
+    return etags;
 }
 
 /**
@@ -91,7 +85,7 @@ async function make_s3_multipart_requests(uploadId, file) {
  * @param total_chunks
  * @param chunk
  */
-async function send_next_s3_multipart_async(uploadId, current_index, total_chunks, chunk) {
+async function upload_s3_multipart_async(uploadId, current_index, total_chunks, chunk) {
     const uploadPart_params = {
         Body: chunk, // chunk 사이즈로 자른 blob
         Bucket: bucket_name,
