@@ -29,12 +29,6 @@ public class VodStreamingController {
 
     private final ChunkFileService chunkFileService;
 
-    @GetMapping("/")
-    public String chunkUploadPage(Model model) {
-        model.addAttribute("filelist", chunkFileService.listFiles());
-        return "index";
-    }
-
     @ResponseBody
     @GetMapping("/vod/{filename}")
     public ResponseEntity<Resource> vod(

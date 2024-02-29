@@ -1,4 +1,6 @@
 local-video/
+*.pem
+*.p12
 
 .gradle
 build/

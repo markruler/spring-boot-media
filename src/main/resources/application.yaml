@@ -1,3 +1,10 @@
+server:
+  ssl:
+    enabled: true
+    key-store: classpath:keystore.p12
+    key-store-type: PKCS12
+    key-alias: alias-name
+    key-store-password: test
 spring:
   servlet:
     multipart:
